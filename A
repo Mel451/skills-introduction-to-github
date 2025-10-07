@@ -1,0 +1,17 @@
+let lastPuertos = [];
+
+function vigilarPuertosPeriodicamente() {
+  setInterval(async () => {
+    const nueva = await obtenerListaPuertos(); // debe devolver array ordenado o normalizado
+    // comparar
+    const iguales = nueva.length === lastPuertos.length &&
+                    nueva.every((v,i) => v === lastPuertos[i]);
+    if (!iguales) {
+      lastPuertos = nueva;
+      io.emit("puertosCOM", nueva); // emite a todos los clientes
+      console.log("Emitiendo puertosCOM:", nueva);
+    }
+  }, 2000); // check cada 2s (ajustar según necesidad)
+}
+
+vigilarPuertosPeriodicamente();
